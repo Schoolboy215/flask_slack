@@ -15,7 +15,7 @@ class slackResponse:
 class reactionCounts(Resource):
 	def get(self):
 		counts = pickle.load(open("reactions.p","rb"))
-		sorted_counts = sorted(counts.items(), key=operator.itemgetter(0))
+		sorted_counts = sorted(counts.items(), key=operator.itemgetter(0), reverse=True)
 		response = slackResponse()
 		response.text = "Here are the current reaction counts:\n"
 		for reaction in sorted_counts:
