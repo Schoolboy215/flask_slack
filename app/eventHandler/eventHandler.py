@@ -1,4 +1,5 @@
 import os,sys,inspect
+import pickle
 import json
 import requests
 import random
@@ -25,6 +26,18 @@ class slackResponse:
 		self.response_type = ""
 		self.attachments = []
 
+def recordReaction(reaction):
+	reactionCounts = {}
+	try:
+		reactionCounts = pickle.load(open("reactions.p","rb"))
+        except:
+		pass
+	if reaction in reactionCounts:
+		reactionCounts[reaction] = reactionCounts[reaction]+1
+	else:
+		reactionCounts[reaction] = 1
+	pickle.dump(reactionCounts, open("reactions.p","wb"))
+
 class eventHandler(Resource):
 	def post(self):
 		args = parser.parse_args()
@@ -35,6 +48,7 @@ class eventHandler(Resource):
 			json_safe = json_safe.replace("'","\"")
 			event = json.loads(json_safe)
 			item = event["item"]
+			recordReaction(event["reaction"])
 			#-->BASIC DELETER
 			if event["reaction"] == 'thad':
 				if isUserAdmin(event["user"]):
