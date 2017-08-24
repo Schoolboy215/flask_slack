@@ -18,7 +18,11 @@ class reactionCounts(Resource):
 		sorted_counts = sorted(counts.items(), key=operator.itemgetter(1), reverse=True)
 		response = slackResponse()
 		response.text = "Here are the current reaction counts:\n"
+		index = 0
 		for reaction in sorted_counts:
 			response.text = response.text + ":"+reaction[0]+": : "+str(reaction[1])+"\n" 
+			index += 1
+			if index == 15:
+				break
 		#response.text = json.dumps(sorted_counts)
 		return response.__dict__
